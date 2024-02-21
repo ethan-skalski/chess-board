@@ -1,38 +1,86 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Component } from 'react';
 
-const startingPieces = {
-  a1: ['R', 'w'],
-  b1: ['N', 'w'],
-  c1: ['B', 'w'],
-  d1: ['Q', 'w'],
-  e1: ['K', 'w'],
-  f1: ['B', 'w'],
-  g1: ['N', 'w'],
-  h1: ['R', 'w'],
-  a2: ['P', 'w'],
-  b2: ['P', 'w'],
-  c2: ['P', 'w'],
-  d2: ['P', 'w'],
-  e2: ['P', 'w'],
-  f2: ['P', 'w'],
-  g2: ['P', 'w'],
-  h2: ['P', 'w'],
-  a8: ['R', 'b'],
-  b8: ['N', 'b'],
-  c8: ['B', 'b'],
-  d8: ['Q', 'b'],
-  e8: ['K', 'b'],
-  f8: ['B', 'b'],
-  g8: ['N', 'b'],
-  h8: ['R', 'b'],
-  a7: ['P', 'b'],
-  b7: ['P', 'b'],
-  c7: ['P', 'b'],
-  d7: ['P', 'b'],
-  e7: ['P', 'b'],
-  f7: ['P', 'b'],
-  g7: ['P', 'b'],
-  h7: ['P', 'b'],
+const matrix = {
+  a: {
+    1: ['R', 'w'],
+    2: ['P', 'w'],
+    3: ['', ''],
+    4: ['', ''],
+    5: ['', ''],
+    6: ['', ''],
+    7: ['P', 'b'],
+    8: ['R', 'b'],
+  },
+  b: {
+    1: ['N', 'w'],
+    2: ['P', 'w'],
+    3: ['', ''],
+    4: ['', ''],
+    5: ['', ''],
+    6: ['', ''],
+    7: ['P', 'b'],
+    8: ['N', 'b'],
+  },
+  c: {
+    1: ['B', 'w'],
+    2: ['P', 'w'],
+    3: ['', ''],
+    4: ['', ''],
+    5: ['', ''],
+    6: ['', ''],
+    7: ['P', 'b'],
+    8: ['B', 'b'],
+  },
+  d: {
+    1: ['Q', 'w'],
+    2: ['P', 'w'],
+    3: ['', ''],
+    4: ['', ''],
+    5: ['', ''],
+    6: ['', ''],
+    7: ['P', 'b'],
+    8: ['Q', 'b'],
+  },
+  e: {
+    1: ['K', 'w'],
+    2: ['P', 'w'],
+    3: ['', ''],
+    4: ['', ''],
+    5: ['', ''],
+    6: ['', ''],
+    7: ['P', 'b'],
+    8: ['K', 'b'],
+  },
+  f: {
+    1: ['B', 'w'],
+    2: ['P', 'w'],
+    3: ['', ''],
+    4: ['', ''],
+    5: ['', ''],
+    6: ['', ''],
+    7: ['P', 'b'],
+    8: ['B', 'b'],
+  },
+  g: {
+    1: ['N', 'w'],
+    2: ['P', 'w'],
+    3: ['', ''],
+    4: ['', ''],
+    5: ['', ''],
+    6: ['', ''],
+    7: ['P', 'b'],
+    8: ['N', 'b'],
+  },
+  h: {
+    1: ['R', 'w'],
+    2: ['P', 'w'],
+    3: ['', ''],
+    4: ['', ''],
+    5: ['', ''],
+    6: ['', ''],
+    7: ['P', 'b'],
+    8: ['R', 'b'],
+  },
 };
 
 const App = () => {
@@ -49,6 +97,8 @@ const App = () => {
 };
 
 const Board = () => {
+  const [boardState, setboardState] = useState(matrix);
+
   const grid = [];
   const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
   let sqColor;
@@ -60,9 +110,9 @@ const Board = () => {
       const coords = letters[lett] + num;
       let piece = '',
         pColor = 'black';
-      if (startingPieces[coords]) {
-        piece = startingPieces[coords][0];
-        if (startingPieces[coords][1] === 'w') {
+      if (matrix[coords[0]][coords[1]]) {
+        piece = matrix[coords[0]][coords[1]][0];
+        if (matrix[coords[0]][coords[1]][1] === 'w') {
           pColor = 'white';
         }
       }
