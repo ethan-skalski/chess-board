@@ -158,7 +158,6 @@ const App = () => {
       //swap turn
       if (boardState.turn === 'w') newBoardState.turn = 'b';
       else newBoardState.turn = 'w';
-      console.log('check');
       // store the unmodified board state
       stateList.push(JSON.parse(JSON.stringify(boardState)));
       // rerender
@@ -194,8 +193,9 @@ const App = () => {
           return true;
         if (curr[0] === next[0] && `${+curr[1] + 1}` === next[1]) return true;
         return false;
-        // separate logic for black
-      } else if (currColor === 'b') {
+      }
+      // separate logic for black
+      if (currColor === 'b') {
         if (currPiece === 'P') {
           if (nextPiece !== '') {
             if (
@@ -227,7 +227,6 @@ const App = () => {
         [-2, 1],
         [-2, -1],
       ];
-      console.log(currLetterIndex + 2);
       potentialMoves.forEach((el) => {
         if (
           currLetterIndex + el[0] < 8 &&
@@ -242,6 +241,47 @@ const App = () => {
       });
       if (moveCoords.includes(next)) return true;
       return false;
+    }
+
+    // rook logic
+    if (currPiece === 'R') {
+      let track;
+      // up logic
+      if (+curr[1] < +next[1]) {
+        track = +curr[1];
+        while (track !== +next[1] - 1) {
+          track++;
+          if (state[curr[0]][`${track}`][0] !== '') return false;
+        }
+        return true;
+      }
+      // down logic
+      if (+curr[1] > +next[1]) {
+        track = +curr[1];
+        while (track !== +next[1] + 1) {
+          track--;
+          if (state[curr[0]][`${track}`][0] !== '') return false;
+        }
+        return true;
+      }
+      // right logic
+      if (currLetterIndex < nextLetterIndex) {
+        track = currLetterIndex;
+        while (track !== nextLetterIndex - 1) {
+          track++;
+          if (state[letters[track]][curr[1]][0] !== '') return false;
+        }
+        return true;
+      }
+      // left logic
+      if (currLetterIndex > nextLetterIndex) {
+        track = currLetterIndex;
+        while (track !== nextLetterIndex + 1) {
+          track--;
+          if (state[letters[track]][curr[1]][0] !== '') return false;
+        }
+        return true;
+      }
     }
 
     // defaults to true to cover for pieces without implemented logic
