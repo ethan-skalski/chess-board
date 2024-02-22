@@ -1,63 +1,9 @@
 import React from 'react';
 import Square from './square.jsx';
 
-// stores the last square clicked
-let focus = '';
-
 // creates the board and handles its functionality
 const Board = (props) => {
-  // function thats ran when a square is clicked
-  const handleClick = (target) => {
-    // checks if square being clicked is blank and a piece hasn't been selected
-    // prevents an empty square from being selected
-    // inefficient, can likely be folded into other if statements
-    if (
-      props.boardState[target.id[0]][target.id[1]][0] === '' &&
-      focus === ''
-    ) {
-      focus = '';
-      // checks if a piece has not been selected
-    } else if (focus === '') {
-      // stores the square clicked in the focus varible
-      focus = target;
-      // deep copy of previous state for rerendering
-      const newBoardState = JSON.parse(JSON.stringify(props.boardState));
-      // gives the selected square a green border
-      newBoardState[focus.id[0]][focus.id[1]][2] = 'g';
-      // rerender
-      props.setboardState(newBoardState);
-      // allows selection to be cancelled if clicking the same piece
-    } else if (target.id === focus.id) {
-      // deep copy of previous state for rerendering
-      const newBoardState = JSON.parse(JSON.stringify(props.boardState));
-      // gives the selected square a black border
-      newBoardState[focus.id[0]][focus.id[1]][2] = 'b';
-      // rerender
-      props.setboardState(newBoardState);
-      // clear the stored square
-      focus = '';
-      // should only be reached if a square is clicked while a piece is selected
-      // checks to prevent capturing own pieces
-    } else if (
-      props.boardState[target.id[0]][target.id[1]][1] !==
-      props.boardState[focus.id[0]][focus.id[1]][1]
-    ) {
-      // deep copy of previous state for rerendering
-      const newBoardState = JSON.parse(JSON.stringify(props.boardState));
-      // removes piece from previously selected square and reverts border to black
-      newBoardState[focus.id[0]][focus.id[1]] = ['', '', 'b'];
-      // assigns stored piece to currently selected square
-      newBoardState[target.id[0]][target.id[1]] =
-        props.boardState[focus.id[0]][focus.id[1]];
-      // assign selected square border color to black
-      newBoardState[target.id[0]][target.id[1]][2] = 'b';
-      // reset stored piece
-      focus = '';
-      // rerender
-      props.setboardState(newBoardState);
-    }
-  };
-
+  
   // where the board is built
   const grid = [];
   // store the letters for the ids
@@ -116,7 +62,7 @@ const Board = (props) => {
           img={img}
           pColor={pColor}
           bColor={bColor}
-          handleClick={handleClick}
+          handleClick={props.handleClick}
         />
       );
       // alternates the background color
