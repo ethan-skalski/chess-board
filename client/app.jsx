@@ -90,27 +90,35 @@ let focus = '';
 
 // lays out overall structure of the application
 const App = () => {
+  // handles rendering and rerendering on state change
+  const [boardState, setboardState] = useState(matrix);
+
   return (
     <>
       <div>
         <h1>Solo Project: An Attempt at Chess</h1>
       </div>
       <div>
-        <Board id='board' />
+        <Board
+          id='board'
+          boardState={boardState}
+          setboardState={setboardState}
+        />
       </div>
+      <button onClick={() => setboardState(matrix)}>Reset</button>
     </>
   );
 };
 
 // creates the board and handles its functionality
-const Board = () => {
-  // handles rendering and rerendering on state change
-  const [boardState, setboardState] = useState(matrix);
-
+const Board = (props) => {
   // function thats ran when a square is clicked
   const handleClick = (target) => {
     // checks if square being clicked is blank and a piece hasn't been selected
-    if (boardState[target.id[0]][target.id[1]][0] === '' && focus === '') {
+    if (
+      props.boardState[target.id[0]][target.id[1]][0] === '' &&
+      focus === ''
+    ) {
       // possibly unnecessary
       focus = '';
       // checks if a piece has not been selected
@@ -118,26 +126,26 @@ const Board = () => {
       // stores the square clicked in the focus varible
       focus = target;
       // deep copy of previous state for rerendering
-      const newBoardState = JSON.parse(JSON.stringify(boardState));
+      const newBoardState = JSON.parse(JSON.stringify(props.boardState));
       // gives the selected square a green border
       newBoardState[focus.id[0]][focus.id[1]][2] = 'g';
       // rerender
-      setboardState(newBoardState);
+      props.setboardState(newBoardState);
       // should only be reached if a square is clicked while a piece is selected
     } else {
       // deep copy of previous state for rerendering
-      const newBoardState = JSON.parse(JSON.stringify(boardState));
+      const newBoardState = JSON.parse(JSON.stringify(props.boardState));
       // removes piece from previously selected square and reverts border to black
       newBoardState[focus.id[0]][focus.id[1]] = ['', '', 'b'];
       // assigns stored piece to currently selected square
       newBoardState[target.id[0]][target.id[1]] =
-        boardState[focus.id[0]][focus.id[1]];
+        props.boardState[focus.id[0]][focus.id[1]];
       // assign selected square border color to black
       newBoardState[target.id[0]][target.id[1]][2] = 'b';
       // reset stored piece
       focus = '';
       // rerender
-      setboardState(newBoardState);
+      props.setboardState(newBoardState);
     }
   };
 
@@ -162,14 +170,16 @@ const Board = () => {
       // declares varibles to store the current square's piece, the color of the piece, and the border color
       let piece, pColor, bColor;
       // uses the coords to find the correct piece type
-      piece = boardState[coords[0]][coords[1]][0];
+      piece = props.boardState[coords[0]][coords[1]][0];
       // uses the coords to assign piece color to white, black, or no color
-      if (boardState[coords[0]][coords[1]][1] === 'w') pColor = 'white';
-      else if (boardState[coords[0]][coords[1]][1] === 'b') pColor = 'black';
+      if (props.boardState[coords[0]][coords[1]][1] === 'w') pColor = 'white';
+      else if (props.boardState[coords[0]][coords[1]][1] === 'b')
+        pColor = 'black';
       else pColor = '';
       // ses the coords to assign border color to black or green
-      if (boardState[coords[0]][coords[1]][2] === 'b') bColor = 'black';
-      else if (boardState[coords[0]][coords[1]][2] === 'g') bColor = 'green';
+      if (props.boardState[coords[0]][coords[1]][2] === 'b') bColor = 'black';
+      else if (props.boardState[coords[0]][coords[1]][2] === 'g')
+        bColor = 'green';
       // assigns appropriate image
       let img = '';
       if (pColor === 'white') {
