@@ -1,4 +1,5 @@
 import React, { useState, useEffect, Component } from 'react';
+// import pawn from './images/chess_pawn.png';
 
 // initial board state
 const matrix = {
@@ -169,12 +170,31 @@ const Board = () => {
       // ses the coords to assign border color to black or green
       if (boardState[coords[0]][coords[1]][2] === 'b') bColor = 'black';
       else if (boardState[coords[0]][coords[1]][2] === 'g') bColor = 'green';
+      // assigns appropriate image
+      let img = '';
+      if (pColor === 'white') {
+        if (piece === 'P') img = 'client/images/pawn_white.png';
+        if (piece === 'R') img = 'client/images/rook_white.png';
+        if (piece === 'N') img = 'client/images/knight_white.png';
+        if (piece === 'B') img = 'client/images/bishop_white.png';
+        if (piece === 'Q') img = 'client/images/queen_white.png';
+        if (piece === 'K') img = 'client/images/king_white.png';
+      } else if (pColor === 'black') {
+        if (piece === 'P') img = 'client/images/pawn_black.png';
+        if (piece === 'R') img = 'client/images/rook_black.png';
+        if (piece === 'N') img = 'client/images/knight_black.png';
+        if (piece === 'B') img = 'client/images/bishop_black.png';
+        if (piece === 'Q') img = 'client/images/queen_black.png';
+        if (piece === 'K') img = 'client/images/king_black.png';
+      }
+
       // adds square to the row
       row.push(
         <Square
           id={coords}
           sqColor={sqColor}
           piece={piece}
+          img={img}
           pColor={pColor}
           bColor={bColor}
           handleClick={handleClick}
@@ -213,7 +233,8 @@ const Square = (props) => {
       id={props.id}
       key={props.id}
     >
-      {props.piece}
+      {/* {props.piece} */}
+      <img src={props.img} id={props.id} />
     </div>
   );
 };
