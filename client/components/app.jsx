@@ -3,6 +3,7 @@ import Board from './board.jsx';
 
 // initial board state
 const matrix = {
+  turn: 'w',
   a: {
     1: ['R', 'w', 'b'],
     2: ['P', 'w', 'b'],
@@ -93,15 +94,17 @@ let focus = '';
 const App = () => {
   // handles rendering and rerendering on state change
   const [boardState, setboardState] = useState(matrix);
-
   // function thats ran when a square is clicked
   const handleClick = (target) => {
     // checks if square being clicked is blank and a piece hasn't been selected
     // prevents an empty square from being selected
-    // inefficient, can likely be folded into other if statements
     if (boardState[target.id[0]][target.id[1]][0] === '' && focus === '') {
-      focus = '';
-      // checks if a piece has not been selected
+      return;
+    } else if (
+      boardState[target.id[0]][target.id[1]][1] !== boardState.turn &&
+      focus === ''
+    ) {
+      return;
     } else if (focus === '') {
       // stores the square clicked in the focus varible
       focus = target;
@@ -152,6 +155,10 @@ const App = () => {
       }
       // reset stored piece
       focus = '';
+      //swap turn
+      if (boardState.turn === 'w') newBoardState.turn = 'b';
+      else newBoardState.turn = 'w';
+      console.log('check');
       // store the unmodified board state
       stateList.push(JSON.parse(JSON.stringify(boardState)));
       // rerender
@@ -240,19 +247,6 @@ const App = () => {
     // defaults to true to cover for pieces without implemented logic
     // should be switched to return false when logic for all pieces is finished
     return true;
-  };
-
-  const knightSquareCalc = (letter, num) => {
-    const potentialMoves = [
-      [2, 1],
-      [2, -1],
-      [1, 2],
-      [-1, 2],
-      [-2, 1],
-      [-2, -1],
-      [1, -2],
-      [-1, -2],
-    ];
   };
 
   const resetState = () => {
