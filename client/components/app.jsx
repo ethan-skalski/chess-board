@@ -91,7 +91,14 @@ const App = () => {
   const [boardState, setboardState] = useState(matrix);
 
   return (
-    <>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
       <div>
         <h1>Solo Project: An Attempt at Chess</h1>
       </div>
@@ -102,8 +109,15 @@ const App = () => {
           setboardState={setboardState}
         />
       </div>
-      <button onClick={() => setboardState(matrix)}>Reset</button>
-    </>
+      <div>
+        <button
+          style={{ height: '70px', width: '400px', margin: '20px' }}
+          onClick={() => setboardState(matrix)}
+        >
+          Reset
+        </button>
+      </div>
+    </div>
   );
 };
 
