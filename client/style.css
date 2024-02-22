@@ -1,0 +1,45 @@
+body {
+  background-color: rgb(160, 146, 146);
+  background-image: url(/client/images/chess_background.png);
+}
+
+h1 {
+  color: black;
+  font-family: Anta;
+}
+
+.top {
+  height: 60px;
+  width: 575px;
+  margin: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgb(70, 58, 58);
+  background-image: url(/client/images/steel.jpg);
+  border-radius: 20px;
+  box-shadow: 1px 1px 15px 10px black;
+}
+
+.boardContainer {
+  box-shadow: 1px 1px 10px 5px black;
+}
+
+button {
+  height: 70px;
+  width: 285px;
+  margin: 15px;
+  font-family: Anta;
+  font-size: x-large;
+  font-weight: bold;
+  border-radius: 10px;
+  background-image: url(/client/images/steel.jpg);
+  box-shadow: 1px 1px 15px 10px black;
+}
+
+button:hover {
+  color: whitesmoke;
+}
+button:active {
+  transform: translateY(4px);
+}

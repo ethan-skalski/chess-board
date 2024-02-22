@@ -281,10 +281,10 @@ const App = () => {
         alignItems: 'center',
       }}
     >
-      <div>
+      <div className='top'>
         <h1>Solo Project: An Attempt at Chess</h1>
       </div>
-      <div>
+      <div className='boardContainer'>
         <Board
           id='board'
           boardState={boardState}
@@ -294,13 +294,13 @@ const App = () => {
       </div>
       <div>
         <button
-          style={{ height: '70px', width: '280px', margin: '20px' }}
+          // style={{ height: '70px', width: '280px', margin: '20px' }}
           onClick={resetState}
         >
           Reset
         </button>
         <button
-          style={{ height: '70px', width: '280px', margin: '20px' }}
+          // style={{ height: '70px', width: '280px', margin: '20px' }}
           onClick={undoState}
         >
           Undo

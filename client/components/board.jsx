@@ -34,7 +34,7 @@ const Board = (props) => {
       // ses the coords to assign border color to black or green
       if (props.boardState[coords[0]][coords[1]][2] === 'b') bColor = 'black';
       else if (props.boardState[coords[0]][coords[1]][2] === 'g')
-        bColor = 'green';
+        bColor = 'yellowgreen';
       // assigns appropriate image
       let img = '';
       if (pColor === 'white') {
