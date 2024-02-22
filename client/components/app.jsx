@@ -137,6 +137,20 @@ const App = () => {
         boardState[focus.id[0]][focus.id[1]];
       // assign selected square border color to black
       newBoardState[target.id[0]][target.id[1]][2] = 'b';
+
+      if (newBoardState[target.id[0]][target.id[1]][0] === 'P') {
+        if (
+          newBoardState[target.id[0]][target.id[1]][1] === 'w' &&
+          target.id[1] === '8'
+        )
+          newBoardState[target.id[0]][target.id[1]][0] = 'Q';
+        else if (
+          newBoardState[target.id[0]][target.id[1]][1] === 'b' &&
+          target.id[1] === '1'
+        )
+          newBoardState[target.id[0]][target.id[1]][0] = 'Q';
+      }
+
       // reset stored piece
       focus = '';
       // store the unmodified board state
