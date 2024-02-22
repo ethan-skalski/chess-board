@@ -122,7 +122,7 @@ const App = () => {
       // clear the stored square
       focus = '';
       // should only be reached if a square is clicked while a piece is selected
-      // checks to prevent capturing own pieces
+      // checks to prevent capturing own pieces and if move is legal
     } else if (
       boardState[target.id[0]][target.id[1]][1] !==
         boardState[focus.id[0]][focus.id[1]][1] &&
@@ -137,7 +137,7 @@ const App = () => {
         boardState[focus.id[0]][focus.id[1]];
       // assign selected square border color to black
       newBoardState[target.id[0]][target.id[1]][2] = 'b';
-
+      // handles pawn promotion
       if (newBoardState[target.id[0]][target.id[1]][0] === 'P') {
         if (
           newBoardState[target.id[0]][target.id[1]][1] === 'w' &&
@@ -150,7 +150,6 @@ const App = () => {
         )
           newBoardState[target.id[0]][target.id[1]][0] = 'Q';
       }
-
       // reset stored piece
       focus = '';
       // store the unmodified board state
@@ -160,6 +159,8 @@ const App = () => {
     }
   };
 
+  // checks if a move is legal
+  // currently only works for the pawns
   const moveLogic = (state, curr, next) => {
     const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
     const currPiece = state[curr[0]][curr[1]][0];
@@ -169,8 +170,10 @@ const App = () => {
     const nextColor = state[next[0]][next[1]][1];
     const nextLetterIndex = letters.indexOf(next[0]);
 
-    if (currColor === 'w') {
-      if (currPiece === 'P') {
+    // pawn logic
+    if (currPiece === 'P') {
+      // separate logic for white
+      if (currColor === 'w') {
         if (nextPiece !== '') {
           if (
             (currLetterIndex === nextLetterIndex + 1 ||
@@ -184,25 +187,72 @@ const App = () => {
           return true;
         if (curr[0] === next[0] && `${+curr[1] + 1}` === next[1]) return true;
         return false;
-      }
-    } else if (currColor === 'b') {
-      if (currPiece === 'P') {
-        if (nextPiece !== '') {
-          if (
-            (currLetterIndex === nextLetterIndex + 1 ||
-              currLetterIndex === nextLetterIndex - 1) &&
-            `${+curr[1] - 1}` === next[1]
-          )
+        // separate logic for black
+      } else if (currColor === 'b') {
+        if (currPiece === 'P') {
+          if (nextPiece !== '') {
+            if (
+              (currLetterIndex === nextLetterIndex + 1 ||
+                currLetterIndex === nextLetterIndex - 1) &&
+              `${+curr[1] - 1}` === next[1]
+            )
+              return true;
+            return false;
+          }
+          if (curr[0] === next[0] && curr[1] === '7' && next[1] === '5')
             return true;
+          if (curr[0] === next[0] && `${+curr[1] - 1}` === next[1]) return true;
           return false;
         }
-        if (curr[0] === next[0] && curr[1] === '7' && next[1] === '5')
-          return true;
-        if (curr[0] === next[0] && `${+curr[1] - 1}` === next[1]) return true;
-        return false;
       }
     }
+
+    // knight logic
+    if (currPiece === 'N') {
+      const moveCoords = [];
+      const potentialMoves = [
+        [1, 2],
+        [-1, 2],
+        [2, 1],
+        [2, -1],
+        [1, -2],
+        [-1, -2],
+        [-2, 1],
+        [-2, -1],
+      ];
+      console.log(currLetterIndex + 2);
+      potentialMoves.forEach((el) => {
+        if (
+          currLetterIndex + el[0] < 8 &&
+          currLetterIndex + el[0] >= 0 &&
+          +curr[1] + el[1] <= 8 &&
+          +curr[1] + el[1] > 0
+        ) {
+          moveCoords.push(
+            letters[currLetterIndex + el[0]] + `${+curr[1] + el[1]}`
+          );
+        }
+      });
+      if (moveCoords.includes(next)) return true;
+      return false;
+    }
+
+    // defaults to true to cover for pieces without implemented logic
+    // should be switched to return false when logic for all pieces is finished
     return true;
+  };
+
+  const knightSquareCalc = (letter, num) => {
+    const potentialMoves = [
+      [2, 1],
+      [2, -1],
+      [1, 2],
+      [-1, 2],
+      [-2, 1],
+      [-2, -1],
+      [1, -2],
+      [-1, -2],
+    ];
   };
 
   const resetState = () => {
@@ -220,7 +270,6 @@ const App = () => {
         setboardState(stateList[stateList.length - 1]);
       }
     }
-    console.log(stateList);
   };
 
   return (
