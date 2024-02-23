@@ -247,41 +247,44 @@ const App = () => {
 
     // rook logic
     if (currPiece === 'R') {
-      // up logic
-      if (+curr[1] < +next[1]) {
-        track = +curr[1];
-        while (track !== +next[1] - 1) {
-          track++;
-          if (state[curr[0]][`${track}`][0] !== '') return false;
+      // ensure destination is a straight line from starting position
+      if (+curr[1] === +next[1] || currLetterIndex === nextLetterIndex) {
+        // up logic
+        if (+curr[1] < +next[1]) {
+          track = +curr[1];
+          while (track !== +next[1] - 1) {
+            track++;
+            if (state[curr[0]][`${track}`][0] !== '') return false;
+          }
+          return true;
         }
-        return true;
-      }
-      // down logic
-      if (+curr[1] > +next[1]) {
-        track = +curr[1];
-        while (track !== +next[1] + 1) {
-          track--;
-          if (state[curr[0]][`${track}`][0] !== '') return false;
+        // down logic
+        if (+curr[1] > +next[1]) {
+          track = +curr[1];
+          while (track !== +next[1] + 1) {
+            track--;
+            if (state[curr[0]][`${track}`][0] !== '') return false;
+          }
+          return true;
         }
-        return true;
-      }
-      // right logic
-      if (currLetterIndex < nextLetterIndex) {
-        track = currLetterIndex;
-        while (track !== nextLetterIndex - 1) {
-          track++;
-          if (state[letters[track]][curr[1]][0] !== '') return false;
+        // right logic
+        if (currLetterIndex < nextLetterIndex) {
+          track = currLetterIndex;
+          while (track !== nextLetterIndex - 1) {
+            track++;
+            if (state[letters[track]][curr[1]][0] !== '') return false;
+          }
+          return true;
         }
-        return true;
-      }
-      // left logic
-      if (currLetterIndex > nextLetterIndex) {
-        track = currLetterIndex;
-        while (track !== nextLetterIndex + 1) {
-          track--;
-          if (state[letters[track]][curr[1]][0] !== '') return false;
+        // left logic
+        if (currLetterIndex > nextLetterIndex) {
+          track = currLetterIndex;
+          while (track !== nextLetterIndex + 1) {
+            track--;
+            if (state[letters[track]][curr[1]][0] !== '') return false;
+          }
+          return true;
         }
-        return true;
       }
     }
 
