@@ -352,6 +352,101 @@ const App = () => {
 
     // queen logic
     if (currPiece === 'Q') {
+      // ensure destination is a straight line from starting position
+      if (+curr[1] === +next[1] || currLetterIndex === nextLetterIndex) {
+        // up logic
+        if (+curr[1] < +next[1]) {
+          track = +curr[1];
+          while (track !== +next[1] - 1) {
+            track++;
+            if (state[curr[0]][`${track}`][0] !== '') return false;
+          }
+          return true;
+        }
+        // down logic
+        if (+curr[1] > +next[1]) {
+          track = +curr[1];
+          while (track !== +next[1] + 1) {
+            track--;
+            if (state[curr[0]][`${track}`][0] !== '') return false;
+          }
+          return true;
+        }
+        // right logic
+        if (currLetterIndex < nextLetterIndex) {
+          track = currLetterIndex;
+          while (track !== nextLetterIndex - 1) {
+            track++;
+            if (state[letters[track]][curr[1]][0] !== '') return false;
+          }
+          return true;
+        }
+        // left logic
+        if (currLetterIndex > nextLetterIndex) {
+          track = currLetterIndex;
+          while (track !== nextLetterIndex + 1) {
+            track--;
+            if (state[letters[track]][curr[1]][0] !== '') return false;
+          }
+          return true;
+        }
+      } else if (
+        Math.abs(+curr[1] - +next[1]) ===
+        Math.abs(currLetterIndex - nextLetterIndex)
+      ) {
+        // up/right logic
+        if (+curr[1] < +next[1] && currLetterIndex < nextLetterIndex) {
+          track = [currLetterIndex, +curr[1]];
+          while (
+            track[0] !== nextLetterIndex - 1 &&
+            track[1] !== +next[1] - 1
+          ) {
+            track[0] += 1;
+            track[1] += 1;
+            if (state[letters[track[0]]][`${track[1]}`][0] !== '') return false;
+          }
+          return true;
+        }
+        // up/left logic
+        if (+curr[1] < +next[1] && currLetterIndex > nextLetterIndex) {
+          track = [currLetterIndex, +curr[1]];
+          while (
+            track[0] !== nextLetterIndex - 1 &&
+            track[1] !== +next[1] + 1
+          ) {
+            track[0] -= 1;
+            track[1] += 1;
+            if (state[letters[track[0]]][`${track[1]}`][0] !== '') return false;
+          }
+          return true;
+        }
+        // down/right logic
+        if (+curr[1] > +next[1] && currLetterIndex < nextLetterIndex) {
+          track = [currLetterIndex, +curr[1]];
+          while (
+            track[0] !== nextLetterIndex + 1 &&
+            track[1] !== +next[1] - 1
+          ) {
+            track[0] += 1;
+            track[1] -= 1;
+            if (state[letters[track[0]]][`${track[1]}`][0] !== '') return false;
+          }
+          return true;
+        }
+        // down/left logic
+        if (+curr[1] > +next[1] && currLetterIndex > nextLetterIndex) {
+          track = [currLetterIndex, +curr[1]];
+          while (
+            track[0] !== nextLetterIndex + 1 &&
+            track[1] !== +next[1] + 1
+          ) {
+            track[0] -= 1;
+            track[1] -= 1;
+            if (state[letters[track[0]]][`${track[1]}`][0] !== '') return false;
+          }
+          return true;
+        }
+      }
     }
 
     // defaults to true to cover for pieces without implemented logic
