@@ -243,9 +243,10 @@ const App = () => {
       return false;
     }
 
+    let track;
+
     // rook logic
     if (currPiece === 'R') {
-      let track;
       // up logic
       if (+curr[1] < +next[1]) {
         track = +curr[1];
@@ -284,9 +285,75 @@ const App = () => {
       }
     }
 
+    // bishop logic
+    if (currPiece === 'B') {
+      // ensure destination is diagnal from starting position
+      if (
+        Math.abs(+curr[1] - +next[1]) ===
+        Math.abs(currLetterIndex - nextLetterIndex)
+      ) {
+        // up/right logic
+        if (+curr[1] < +next[1] && currLetterIndex < nextLetterIndex) {
+          track = [currLetterIndex, +curr[1]];
+          while (
+            track[0] !== nextLetterIndex - 1 &&
+            track[1] !== +next[1] - 1
+          ) {
+            track[0] += 1;
+            track[1] += 1;
+            if (state[letters[track[0]]][`${track[1]}`][0] !== '') return false;
+          }
+          return true;
+        }
+        // up/left logic
+        if (+curr[1] < +next[1] && currLetterIndex > nextLetterIndex) {
+          track = [currLetterIndex, +curr[1]];
+          while (
+            track[0] !== nextLetterIndex - 1 &&
+            track[1] !== +next[1] + 1
+          ) {
+            track[0] -= 1;
+            track[1] += 1;
+            if (state[letters[track[0]]][`${track[1]}`][0] !== '') return false;
+          }
+          return true;
+        }
+        // down/right logic
+        if (+curr[1] > +next[1] && currLetterIndex < nextLetterIndex) {
+          track = [currLetterIndex, +curr[1]];
+          while (
+            track[0] !== nextLetterIndex + 1 &&
+            track[1] !== +next[1] - 1
+          ) {
+            track[0] += 1;
+            track[1] -= 1;
+            if (state[letters[track[0]]][`${track[1]}`][0] !== '') return false;
+          }
+          return true;
+        }
+        // down/left logic
+        if (+curr[1] > +next[1] && currLetterIndex > nextLetterIndex) {
+          track = [currLetterIndex, +curr[1]];
+          while (
+            track[0] !== nextLetterIndex + 1 &&
+            track[1] !== +next[1] + 1
+          ) {
+            track[0] -= 1;
+            track[1] -= 1;
+            if (state[letters[track[0]]][`${track[1]}`][0] !== '') return false;
+          }
+          return true;
+        }
+      }
+    }
+
+    // queen logic
+    if (currPiece === 'Q') {
+    }
+
     // defaults to true to cover for pieces without implemented logic
     // should be switched to return false when logic for all pieces is finished
-    return true;
+    return false;
   };
 
   const resetState = () => {

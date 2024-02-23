@@ -3,7 +3,6 @@ import Square from './square.jsx';
 
 // creates the board and handles its functionality
 const Board = (props) => {
-  
   // where the board is built
   const grid = [];
   // store the letters for the ids
