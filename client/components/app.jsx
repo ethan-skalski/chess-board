@@ -2,8 +2,12 @@ import React, { useState } from 'react';
 import Board from './board.jsx';
 
 // initial board state
-const matrix = {
+const initialState = {
   turn: 'w',
+  kCastleWhite: true,
+  qCastleWhite: true,
+  kCastleBlack: true,
+  qCastleBlack: true,
   a: {
     1: ['R', 'w', 'b'],
     2: ['P', 'w', 'b'],
@@ -93,7 +97,7 @@ let focus = '';
 // lays out overall structure of the application
 const App = () => {
   // handles rendering and rerendering on state change
-  const [boardState, setboardState] = useState(matrix);
+  const [boardState, setboardState] = useState(initialState);
   // function thats ran when a square is clicked
   const handleClick = (target) => {
     // checks if square being clicked is blank and a piece hasn't been selected
@@ -140,6 +144,7 @@ const App = () => {
         boardState[focus.id[0]][focus.id[1]];
       // assign selected square border color to black
       newBoardState[target.id[0]][target.id[1]][2] = 'b';
+
       // handles pawn promotion
       if (newBoardState[target.id[0]][target.id[1]][0] === 'P') {
         if (
@@ -153,6 +158,56 @@ const App = () => {
         )
           newBoardState[target.id[0]][target.id[1]][0] = 'Q';
       }
+
+      // check for king location to set castling to false
+      if (newBoardState[target.id[0]][target.id[1]][0] === 'K') {
+        // white
+        if (focus.id === 'e1') {
+          // check if white king just castled kingside
+          if (target.id === 'g1') {
+            // move kingside rook
+            newBoardState['f']['1'] = newBoardState['h']['1'];
+            newBoardState['h']['1'] = ['', '', 'b'];
+          }
+          // check if white king just castled queenside
+          if (target.id === 'c1') {
+            // move queenside rook
+            newBoardState['d']['1'] = newBoardState['a']['1'];
+            newBoardState['a']['1'] = ['', '', 'b'];
+          }
+          newBoardState.kCastleWhite = false;
+          newBoardState.qCastleWhite = false;
+        }
+        // black
+        if (focus.id[0] === 'e' && focus.id[1] === '8') {
+          // check if black king just castled kingside
+          if (target.id === 'g8') {
+            // move kingside rook
+            newBoardState['f']['8'] = newBoardState['h']['8'];
+            newBoardState['h']['8'] = ['', '', 'b'];
+          }
+          // check if black king just castled queenside
+          if (target.id === 'c8') {
+            // move queenside rook
+            newBoardState['d']['8'] = newBoardState['a']['8'];
+            newBoardState['a']['8'] = ['', '', 'b'];
+          }
+          newBoardState.kCastleBlack = false;
+          newBoardState.qCastleBlack = false;
+        }
+      }
+      // check for rook location to set castling to false
+      if (newBoardState[target.id[0]][target.id[1]][0] === 'R') {
+        if (focus.id[0] === 'a' && focus.id[1] === '1')
+          newBoardState.qCastleWhite = false;
+        if (focus.id[0] === 'h' && focus.id[1] === '1')
+          newBoardState.kCastleWhite = false;
+        if (focus.id[0] === 'a' && focus.id[1] === '8')
+          newBoardState.qCastleBlack = false;
+        if (focus.id[0] === 'h' && focus.id[1] === '8')
+          newBoardState.kCastleBlack = false;
+      }
+
       // reset stored piece
       focus = '';
       //swap turn
@@ -166,7 +221,6 @@ const App = () => {
   };
 
   // checks if a move is legal
-  // currently only works for the pawns
   const moveLogic = (state, curr, next) => {
     const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
     const currPiece = state[curr[0]][curr[1]][0];
@@ -290,7 +344,7 @@ const App = () => {
 
     // bishop logic
     if (currPiece === 'B') {
-      // ensure destination is diagnal from starting position
+      // ensure destination is diagonal from starting position
       if (
         Math.abs(+curr[1] - +next[1]) ===
         Math.abs(currLetterIndex - nextLetterIndex)
@@ -312,8 +366,8 @@ const App = () => {
         if (+curr[1] < +next[1] && currLetterIndex > nextLetterIndex) {
           track = [currLetterIndex, +curr[1]];
           while (
-            track[0] !== nextLetterIndex - 1 &&
-            track[1] !== +next[1] + 1
+            track[0] !== nextLetterIndex + 1 &&
+            track[1] !== +next[1] - 1
           ) {
             track[0] -= 1;
             track[1] += 1;
@@ -325,8 +379,8 @@ const App = () => {
         if (+curr[1] > +next[1] && currLetterIndex < nextLetterIndex) {
           track = [currLetterIndex, +curr[1]];
           while (
-            track[0] !== nextLetterIndex + 1 &&
-            track[1] !== +next[1] - 1
+            track[0] !== nextLetterIndex - 1 &&
+            track[1] !== +next[1] + 1
           ) {
             track[0] += 1;
             track[1] -= 1;
@@ -352,7 +406,7 @@ const App = () => {
 
     // queen logic
     if (currPiece === 'Q') {
-      // ensure destination is a straight line from starting position
+      // Straight line logic
       if (+curr[1] === +next[1] || currLetterIndex === nextLetterIndex) {
         // up logic
         if (+curr[1] < +next[1]) {
@@ -390,6 +444,7 @@ const App = () => {
           }
           return true;
         }
+        // Diagonal logic
       } else if (
         Math.abs(+curr[1] - +next[1]) ===
         Math.abs(currLetterIndex - nextLetterIndex)
@@ -411,8 +466,8 @@ const App = () => {
         if (+curr[1] < +next[1] && currLetterIndex > nextLetterIndex) {
           track = [currLetterIndex, +curr[1]];
           while (
-            track[0] !== nextLetterIndex - 1 &&
-            track[1] !== +next[1] + 1
+            track[0] !== nextLetterIndex + 1 &&
+            track[1] !== +next[1] - 1
           ) {
             track[0] -= 1;
             track[1] += 1;
@@ -424,8 +479,8 @@ const App = () => {
         if (+curr[1] > +next[1] && currLetterIndex < nextLetterIndex) {
           track = [currLetterIndex, +curr[1]];
           while (
-            track[0] !== nextLetterIndex + 1 &&
-            track[1] !== +next[1] - 1
+            track[0] !== nextLetterIndex - 1 &&
+            track[1] !== +next[1] + 1
           ) {
             track[0] += 1;
             track[1] -= 1;
@@ -449,13 +504,66 @@ const App = () => {
       }
     }
 
-    // defaults to true to cover for pieces without implemented logic
-    // should be switched to return false when logic for all pieces is finished
+    // king logic
+    if (currPiece === 'K') {
+      // castling logic
+      // white
+      if (currColor === 'w' && curr === 'e1') {
+        // kingside castle
+        if (
+          state.kCastleWhite === true &&
+          next === 'g1' &&
+          state.f['1'][0] === ''
+        ) {
+          return true;
+        }
+        // queenside castle
+        if (
+          state.qCastleWhite === true &&
+          next === 'c1' &&
+          state.b['1'][0] === '' &&
+          state.d['1'][0] === ''
+        ) {
+          return true;
+        }
+      }
+      // black
+      if (currColor === 'b' && curr === 'e8') {
+        // kingside castle
+        if (
+          state.kCastleBlack === true &&
+          next === 'g8' &&
+          state.f['8'][0] === ''
+        ) {
+          return true;
+        }
+        // queenside castle
+        if (
+          state.qCastleBlack === true &&
+          next === 'c8' &&
+          state.b['8'][0] === '' &&
+          state.d['8'][0] === ''
+        ) {
+          return true;
+        }
+      }
+
+      // standard movements
+      if (
+        (+curr[1] === +next[1] ||
+          +curr[1] === +next[1] + 1 ||
+          +curr[1] === +next[1] - 1) &&
+        (currLetterIndex === nextLetterIndex ||
+          currLetterIndex === nextLetterIndex + 1 ||
+          currLetterIndex === nextLetterIndex - 1)
+      )
+        return true;
+    }
     return false;
   };
 
   const resetState = () => {
-    setboardState(matrix);
+    setboardState(initialState);
     stateList = [];
   };
 
@@ -463,7 +571,7 @@ const App = () => {
     if (stateList.length !== 0) {
       if (stateList.length === 1) {
         stateList.pop();
-        setboardState(matrix);
+        setboardState(initialState);
       } else {
         stateList.pop();
         setboardState(stateList[stateList.length - 1]);
