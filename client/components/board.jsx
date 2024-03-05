@@ -35,22 +35,22 @@ const Board = (props) => {
       else if (props.boardState[coords[0]][coords[1]][2] === 'g')
         bColor = 'yellowgreen';
       // assigns appropriate image
-      let img = '';
+      let img = 'client/images/';
       if (pColor === 'white') {
-        if (piece === 'P') img = 'client/images/pawn_white.png';
-        if (piece === 'R') img = 'client/images/rook_white.png';
-        if (piece === 'N') img = 'client/images/knight_white.png';
-        if (piece === 'B') img = 'client/images/bishop_white.png';
-        if (piece === 'Q') img = 'client/images/queen_white.png';
-        if (piece === 'K') img = 'client/images/king_white.png';
+        if (piece === 'P') img += 'pawn_white.png';
+        if (piece === 'R') img += 'rook_white.png';
+        if (piece === 'N') img += 'knight_white.png';
+        if (piece === 'B') img += 'bishop_white.png';
+        if (piece === 'Q') img += 'queen_white.png';
+        if (piece === 'K') img += 'king_white.png';
       } else if (pColor === 'black') {
-        if (piece === 'P') img = 'client/images/pawn_black.png';
-        if (piece === 'R') img = 'client/images/rook_black.png';
-        if (piece === 'N') img = 'client/images/knight_black.png';
-        if (piece === 'B') img = 'client/images/bishop_black.png';
-        if (piece === 'Q') img = 'client/images/queen_black.png';
-        if (piece === 'K') img = 'client/images/king_black.png';
-      }
+        if (piece === 'P') img += 'pawn_black.png';
+        if (piece === 'R') img += 'rook_black.png';
+        if (piece === 'N') img += 'knight_black.png';
+        if (piece === 'B') img += 'bishop_black.png';
+        if (piece === 'Q') img += 'queen_black.png';
+        if (piece === 'K') img += 'king_black.png';
+      } else img = '';
 
       // adds square to the row
       row.push(
