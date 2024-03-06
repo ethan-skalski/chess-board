@@ -11,14 +11,12 @@ const moveLogic = (state, curr, next) => {
   if (currPiece === 'P') {
     // separate logic for white
     if (currColor === 'w') {
-      if (nextPiece !== '') {
-        if (
-          (currLetterIndex === nextLetterIndex + 1 ||
-            currLetterIndex === nextLetterIndex - 1) &&
-          `${+curr[1] + 1}` === next[1]
-        )
-          return true;
-        return false;
+      if (
+        (currLetterIndex === nextLetterIndex + 1 ||
+          currLetterIndex === nextLetterIndex - 1) &&
+        `${+curr[1] + 1}` === next[1]
+      ) {
+        if (nextPiece !== '' || state[next[0]][next[1]][3] === 'e') return true;
       }
       if (curr[0] === next[0] && curr[1] === '2' && next[1] === '4')
         return true;
@@ -27,21 +25,17 @@ const moveLogic = (state, curr, next) => {
     }
     // separate logic for black
     if (currColor === 'b') {
-      if (currPiece === 'P') {
-        if (nextPiece !== '') {
-          if (
-            (currLetterIndex === nextLetterIndex + 1 ||
-              currLetterIndex === nextLetterIndex - 1) &&
-            `${+curr[1] - 1}` === next[1]
-          )
-            return true;
-          return false;
-        }
-        if (curr[0] === next[0] && curr[1] === '7' && next[1] === '5')
-          return true;
-        if (curr[0] === next[0] && `${+curr[1] - 1}` === next[1]) return true;
-        return false;
+      if (
+        (currLetterIndex === nextLetterIndex + 1 ||
+          currLetterIndex === nextLetterIndex - 1) &&
+        `${+curr[1] - 1}` === next[1]
+      ) {
+        if (nextPiece !== '' || state[next[0]][next[1]][3] === 'e') return true;
       }
+      if (curr[0] === next[0] && curr[1] === '7' && next[1] === '5')
+        return true;
+      if (curr[0] === next[0] && `${+curr[1] - 1}` === next[1]) return true;
+      return false;
     }
   }
 

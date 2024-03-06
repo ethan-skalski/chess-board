@@ -51,6 +51,10 @@ const App = () => {
     ) {
       // deep copy of previous state for rerendering
       const newBoardState = JSON.parse(JSON.stringify(boardState));
+
+      // check if an enpassant occurred
+      const enPassant = newBoardState[target.id[0]][target.id[1]][3] === 'e';
+
       // removes piece from previously selected square and reverts border to black
       newBoardState[focus.id[0]][focus.id[1]] = ['', '', 'b'];
       // assigns stored piece to currently selected square
@@ -59,8 +63,31 @@ const App = () => {
       // assign selected square border color to black
       newBoardState[target.id[0]][target.id[1]][2] = 'b';
 
-      // handles pawn promotion
+      // handles pawn promotion and en passant
       if (newBoardState[target.id[0]][target.id[1]][0] === 'P') {
+        // removes captured pawn if en passant
+        if (enPassant) {
+          if (newBoardState[target.id[0]][target.id[1]][1] === 'w')
+            newBoardState[target.id[0]]['5'] = ['', '', 'b', ''];
+          if (newBoardState[target.id[0]][target.id[1]][1] === 'b')
+            newBoardState[target.id[0]]['4'] = ['', '', 'b', ''];
+        } else {
+          for (let x in newBoardState) {
+            if (typeof newBoardState[x] === 'object') {
+              newBoardState[x]['3'][3] = '';
+              newBoardState[x]['6'][3] = '';
+            }
+          }
+        }
+
+        // track double move
+        if (focus.id[1] === '2' && target.id[1] === '4') {
+          newBoardState[focus.id[0]]['3'][3] = 'e';
+        } else if (focus.id[1] === '7' && target.id[1] === '5') {
+          newBoardState[focus.id[0]]['6'][3] = 'e';
+        }
+
+        // promotion check
         if (
           newBoardState[target.id[0]][target.id[1]][1] === 'w' &&
           target.id[1] === '8'
@@ -71,6 +98,13 @@ const App = () => {
           target.id[1] === '1'
         )
           newBoardState[target.id[0]][target.id[1]][0] = 'Q';
+      } else {
+        for (let x in newBoardState) {
+          if (typeof newBoardState[x] === 'object') {
+            newBoardState[x]['3'][3] = '';
+            newBoardState[x]['6'][3] = '';
+          }
+        }
       }
 
       // check for king location to set castling to false
@@ -93,7 +127,7 @@ const App = () => {
           newBoardState.qCastleWhite = false;
         }
         // black
-        if (focus.id[0] === 'e' && focus.id[1] === '8') {
+        if (focus.id === 'e8') {
           // check if black king just castled kingside
           if (target.id === 'g8') {
             // move kingside rook
